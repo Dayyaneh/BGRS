@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormControl, InputLabel, Select, MenuItem, makeStyles, LinearProgress } from '@material-ui/core';
-import { getCharacterList, loadCharacterList, setSelectedCharacter } from '../../actions/characterSlice';
+import { getCharacterList, loadCharacterList, setSelectedCharacterList } from '../../actions/characterSlice';
 import Character from '../../data-models/characters';
 import { clearResult } from '../../actions/movieSlice';
 
@@ -23,19 +23,21 @@ export default function CharacterSelect() {
     const CharacterList: Character[] = useSelector(getCharacterList);
 
     useEffect(() => {
-        dispatch(loadCharacterList())
+        if (!CharacterList) {
+            dispatch(loadCharacterList())
+        }
     });
 
     useEffect(() => {
         if (CharacterList && selected === 0) {
-            dispatch(setSelectedCharacter(CharacterList[selected]));
+            dispatch(setSelectedCharacterList(CharacterList[selected]));
         }
     }, CharacterList);
 
     const onMovieSelected = (event: React.ChangeEvent<{ value: any }>) => {
         const selectedIndex = event.target.value;
         setSelected(selectedIndex);
-        dispatch(setSelectedCharacter(CharacterList[selectedIndex]));
+        dispatch(setSelectedCharacterList(CharacterList[selectedIndex]));
         dispatch(clearResult());
     };
 

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Character from '../data-models/characters';
 import { fetchCharacterList } from '../api/ApiCalls';
+import { loadMovieList } from './movieSlice';
 
 interface CharacterState {
     CharacterList?: Character[] | null,
@@ -46,7 +47,7 @@ export const loadCharacterList = () => (dispatch: (arg: any) => void) => {
     const result = fetchCharacterList();
     result.then((value) => {
         if (value.success) {
-            dispatch(setResultAsSuccessfull(value))
+            dispatch(setResultAsSuccessfull(value));
         }
         else if (value.error) {
             dispatch(setResultAsError())
@@ -54,10 +55,17 @@ export const loadCharacterList = () => (dispatch: (arg: any) => void) => {
     });
 };
 
+export const setSelectedCharacterList = (Selected: Character) => (dispatch: (arg: any) => void) => {
+    dispatch(setSelectedCharacter(Selected));
+    if (Selected.movies)
+        dispatch(loadMovieList(Selected.movies))
+};
+
 export const getCharacterList = (state: { character: { CharacterList: Character[]; }; }) =>
     state.character.CharacterList
 
-export const getSelectedCharacter = (state: { character: { Selected: any; }; }) =>
-    state.character.Selected;
+export const getSelectedCharacter = (state: { character: { Selected: any; }; }) => {
+    return state.character.Selected;
+}
 
 export default characterSlice.reducer;

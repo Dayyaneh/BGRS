@@ -4,6 +4,7 @@ import CharacterSelect from '../components/CharacterSelect/CharacterSelect';
 import MovieList from '../components/MovieList/MoveList';
 import './Home.css';
 import MovieInfo from '../components/MovieInfo/MovieInfo';
+import CharacterSummery from '../components/CharacterSummery/CharacterSummery';
 
 class Home extends React.Component {
     render() {
@@ -11,6 +12,7 @@ class Home extends React.Component {
             <Container maxWidth="sm">
                 <CharacterSelect />
                 <MovieList />
+                <CharacterSummery />
                 <MovieInfo />
             </Container>
         </div>);

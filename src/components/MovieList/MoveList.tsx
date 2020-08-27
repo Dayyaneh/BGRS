@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -8,9 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MovieIcon from '@material-ui/icons/Movie';
 import { FormControl } from '@material-ui/core';
 
-import Character from '../../data-models/characters';
-import { getSelectedCharacter } from '../../actions/characterSlice';
-import { loadMovieInfo } from '../../actions/movieSlice';
+import { getMovieList, setSelectedMovie, getMovieInfo } from '../../actions/movieSlice';
+import Movie from '../../data-models/movie';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -30,22 +29,29 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function MovieList() {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const selectedCharacter: Character = useSelector(getSelectedCharacter);
+    const MovieList: Movie[] = useSelector(getMovieList);
+    const movieInfo: Movie = useSelector(getMovieInfo);
 
-    const onMovieSelected = (selectedMovie: string) => {
-        dispatch(loadMovieInfo(selectedMovie));
+    useEffect(() => {
+        if (MovieList && MovieList.length && !movieInfo) {
+            dispatch(setSelectedMovie(MovieList[0]));
+        }
+    });
+
+    const onMovieSelected = (selectedMovie: Movie) => {
+        dispatch(setSelectedMovie(selectedMovie));
     }
 
     return (
         <FormControl variant="outlined" className={classes.formControl}>
             <List component="nav" aria-label="main mailbox folders">
                 {
-                    selectedCharacter && selectedCharacter.movies?.map((aMovie: string) =>
-                        <ListItem button onClick={() => {onMovieSelected(aMovie)}}>
+                    MovieList && MovieList.map((aMovie: Movie) =>
+                        <ListItem button onClick={() => { onMovieSelected(aMovie) }}>
                             <ListItemIcon>
                                 <MovieIcon />
                             </ListItemIcon>
-                            <ListItemText primary={ aMovie } />
+                            <ListItemText primary={aMovie.title} />
                         </ListItem>
                     )
                 }
